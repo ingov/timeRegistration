@@ -15,7 +15,7 @@ import javax.ws.rs.PathParam;
  * @author veithi
  */
 @Stateless
-@Path("timeEntries")
+@Path("timeentries")
 public class TimeEntriesResource {
 
     @Inject
