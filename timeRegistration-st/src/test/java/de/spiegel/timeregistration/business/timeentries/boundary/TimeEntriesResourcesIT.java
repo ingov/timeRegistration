@@ -27,15 +27,18 @@ public class TimeEntriesResourcesIT {
     @Test
     public void crud() {
         JsonObjectBuilder timeEntryBuilder = Json.createObjectBuilder();
-        JsonObject timeEntryJson = timeEntryBuilder.add("caption", "implement")
+        JsonObject timeEntryJson = timeEntryBuilder
+                .add("caption", "implement 42")
                 .add("description", "...")
-                .add("priority", 42).build();
+                .add("priority", 42)
+                .build();
 
         Response postReponse = this.provider.target().request().post(Entity.json(timeEntryJson));
         assertThat(postReponse.getStatus(), is(201));
-        String loaction = postReponse.getHeaderString("Location");
-        System.out.println("loaction = " + loaction);
+        String location = postReponse.getHeaderString("Location");
+        System.out.println("loaction = " + location);
 
+        // find all
         Response response = this.provider.target()
                 .request(MediaType.APPLICATION_JSON)
                 .get();
@@ -43,18 +46,82 @@ public class TimeEntriesResourcesIT {
         JsonArray allTimeEntries = response.readEntity(JsonArray.class);
         assertFalse(allTimeEntries.isEmpty());
 
-        // GET with id
-        JsonObject dedicatedTimeEntry = this.provider.target()
-                .path("42")
+        // find
+        JsonObject dedicatedTimeEntry = this.provider.client()
+                .target(location)
                 .request(MediaType.APPLICATION_JSON)
                 .get(JsonObject.class);
         assertTrue(dedicatedTimeEntry.getString("caption").contains("42"));
 
+        // update
+        JsonObjectBuilder updateBuilder = Json.createObjectBuilder();
+        JsonObject updated = updateBuilder
+                .add("caption", "implement 42 updated")
+                .build();
+
+        Response updateResponse = this.provider.client().target(location)
+                .request(MediaType.APPLICATION_JSON)
+                .put(Entity.json(updated));
+
+        //find again
+        JsonObject updatedTimeEntry = this.provider.client()
+                .target(location)
+                .request(MediaType.APPLICATION_JSON)
+                .get(JsonObject.class);
+        assertTrue(updatedTimeEntry.getString("caption").contains("update"));
+
+        // update status
+        JsonObjectBuilder statusBuilder = Json.createObjectBuilder();
+        JsonObject status = updateBuilder
+                .add("done", true)
+                .build();
+
+        Response statusResponse = this.provider.client().target(location)
+                .path("status")
+                .request(MediaType.APPLICATION_JSON)
+                .put(Entity.json(status));
+
+        //verify status
+        updatedTimeEntry = this.provider.client()
+                .target(location)
+                .request(MediaType.APPLICATION_JSON)
+                .get(JsonObject.class);
+        assertTrue(updatedTimeEntry.getBoolean("done"));
+
+        // update not existing status
+        JsonObjectBuilder notexistingBuilder = Json.createObjectBuilder();
+        status = updateBuilder
+                .add("done", true)
+                .build();
+
+        statusResponse = this.provider.target()
+                .path("-42")
+                .path("status")
+                .request(MediaType.APPLICATION_JSON)
+                .put(Entity.json(status));
+        assertThat(statusResponse.getStatus(), is(400));
+        assertFalse(statusResponse.getHeaderString("reason").isEmpty());
+
+        // update malformed status
+        JsonObjectBuilder malformedBuilder = Json.createObjectBuilder();
+        status = updateBuilder
+                .add("womething wrong", true)
+                .build();
+
+        statusResponse = this.provider.client()
+                .target(location)
+                .path("status")
+                .request(MediaType.APPLICATION_JSON)
+                .put(Entity.json(status));
+        assertThat(statusResponse.getStatus(), is(400));
+        assertFalse(statusResponse.getHeaderString("reason").isEmpty());
+
+//      delete non-existing
         Response deleteResponse = this.provider.target()
                 .path("42")
                 .request(MediaType.APPLICATION_JSON)
                 .delete();
-//        System.out.println("deleteResponse = " + deleteResponse);
+        System.out.println("deleteResponse = " + deleteResponse);
         assertThat(deleteResponse.getStatus(), is(204));
     }
 

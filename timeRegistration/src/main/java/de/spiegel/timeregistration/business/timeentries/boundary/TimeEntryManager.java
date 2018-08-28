@@ -4,6 +4,7 @@ import de.spiegel.timeregistration.business.timeentries.entity.TimeEntry;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
 
 /**
@@ -21,8 +22,12 @@ public class TimeEntryManager {
     }
 
     public void delete(long id) {
-        TimeEntry reference = this.em.getReference(TimeEntry.class, id);
-        this.em.remove(reference);
+        try {
+            TimeEntry reference = this.em.getReference(TimeEntry.class, id);
+            this.em.remove(reference);
+        } catch (EntityNotFoundException e) {
+            // we want to remove it... 
+        }
     }
 
     public List<TimeEntry> all() {
@@ -32,6 +37,15 @@ public class TimeEntryManager {
 
     public TimeEntry save(TimeEntry timeEntry) {
         return this.em.merge(timeEntry);
+    }
+
+    public TimeEntry updateStatus(long id, boolean done) {
+        TimeEntry timeEntry = this.findById(id);
+        if (timeEntry == null) {
+            return null;
+        }
+        timeEntry.setDone(done);
+        return timeEntry;
     }
 
 }

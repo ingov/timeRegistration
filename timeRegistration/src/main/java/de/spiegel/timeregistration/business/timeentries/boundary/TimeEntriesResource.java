@@ -5,7 +5,6 @@ import java.net.URI;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -25,16 +24,9 @@ public class TimeEntriesResource {
     @Inject
     TimeEntryManager manager;
 
-    @GET
     @Path("{id}")
-    public TimeEntry find(@PathParam("id") long id) {
-        return this.manager.findById(id);
-    }
-
-    @DELETE
-    @Path("{id}")
-    public void delete(@PathParam("id") long id) {
-        this.manager.delete(id);
+    public TimeEntryResource find(@PathParam("id") long id) {
+        return new TimeEntryResource(id, manager);
     }
 
     @GET

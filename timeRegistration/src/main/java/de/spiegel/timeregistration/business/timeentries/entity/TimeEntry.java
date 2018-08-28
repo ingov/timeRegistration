@@ -28,6 +28,8 @@ public class TimeEntry {
     private String description;
     private int priority;
 
+    private boolean done;
+
     public TimeEntry(String caption, String description, int priority) {
         this.caption = caption;
         this.description = description;
@@ -41,6 +43,10 @@ public class TimeEntry {
         return id;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public String getCaption() {
         return caption;
     }
@@ -52,5 +58,14 @@ public class TimeEntry {
     public int getPriority() {
         return priority;
     }
+
+    public boolean isDone() {
+        return done;
+    }
+
+    public void setDone(boolean done) {
+        this.done = done;
+    }
+
 
 }
