@@ -1,6 +1,7 @@
 package de.spiegel.timeregistration.business.timeentries.boundary;
 
 import de.spiegel.timeregistration.business.timeentries.entity.TimeEntry;
+import java.net.URI;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -9,6 +10,9 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
 /**
  *
@@ -40,10 +44,11 @@ public class TimeEntriesResource {
     }
 
     @POST
-    public void save(TimeEntry timeEntry) {
-        this.manager.save(timeEntry);
+    public Response save(TimeEntry timeEntry, @Context UriInfo uriInfo) {
+        TimeEntry saved = this.manager.save(timeEntry);
+        long id = saved.getId();
+        URI location = uriInfo.getAbsolutePathBuilder().path("/" + id).build();
+        return Response.created(location).build();
     }
-
-
 
 }
