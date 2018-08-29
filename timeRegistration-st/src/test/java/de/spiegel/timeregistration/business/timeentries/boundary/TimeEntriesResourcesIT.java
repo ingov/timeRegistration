@@ -52,16 +52,31 @@ public class TimeEntriesResourcesIT {
                 .request(MediaType.APPLICATION_JSON)
                 .get(JsonObject.class);
         assertTrue(dedicatedTimeEntry.getString("caption").contains("42"));
+        long version = dedicatedTimeEntry.getJsonNumber("version").longValue();
 
         // update
         JsonObjectBuilder updateBuilder = Json.createObjectBuilder();
         JsonObject updated = updateBuilder
                 .add("caption", "implement 42 updated")
+                .add("version", version)
                 .build();
 
         Response updateResponse = this.provider.client().target(location)
                 .request(MediaType.APPLICATION_JSON)
                 .put(Entity.json(updated));
+        assertThat(updateResponse.getStatus(), is(200));
+
+        // update again
+        updateBuilder = Json.createObjectBuilder();
+        updated = updateBuilder
+                .add("caption", "implement 42 updated 2")
+                .add("priority", 12)
+                .build();
+
+        updateResponse = this.provider.client().target(location)
+                .request(MediaType.APPLICATION_JSON)
+                .put(Entity.json(updated));
+        assertThat(updateResponse.getStatus(), is(200));
 
         //find again
         JsonObject updatedTimeEntry = this.provider.client()
