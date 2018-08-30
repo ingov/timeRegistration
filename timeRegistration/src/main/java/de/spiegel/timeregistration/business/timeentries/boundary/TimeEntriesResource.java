@@ -5,6 +5,7 @@ import java.net.URI;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.validation.Valid;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -32,11 +33,10 @@ public class TimeEntriesResource {
     @GET
     public List<TimeEntry> all() {
         return this.manager.all();
-
     }
 
     @POST
-    public Response save(TimeEntry timeEntry, @Context UriInfo uriInfo) {
+    public Response save(@Valid TimeEntry timeEntry, @Context UriInfo uriInfo) {
         TimeEntry saved = this.manager.save(timeEntry);
         long id = saved.getId();
         URI location = uriInfo.getAbsolutePathBuilder().path("/" + id).build();

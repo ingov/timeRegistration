@@ -10,6 +10,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import org.junit.Rule;
@@ -54,36 +55,41 @@ public class TimeEntriesResourcesIT {
         assertTrue(dedicatedTimeEntry.getString("caption").contains("42"));
         long version = dedicatedTimeEntry.getJsonNumber("version").longValue();
 
-        // update
+        //update
         JsonObjectBuilder updateBuilder = Json.createObjectBuilder();
-        JsonObject updated = updateBuilder
-                .add("caption", "implement 42 updated")
-                .add("version", version)
-                .build();
+        JsonObject updated = updateBuilder.
+                add("caption", "implemented").
+                add("version", version).
+                build();
 
-        Response updateResponse = this.provider.client().target(location)
-                .request(MediaType.APPLICATION_JSON)
+        Response updateResponse = this.provider.client().
+                target(location).
+                request(MediaType.APPLICATION_JSON)
                 .put(Entity.json(updated));
         assertThat(updateResponse.getStatus(), is(200));
 
-        // update again
+        //update again
         updateBuilder = Json.createObjectBuilder();
-        updated = updateBuilder
-                .add("caption", "implement 42 updated 2")
-                .add("priority", 12)
-                .build();
+        updated = updateBuilder.
+                add("caption", "implemented").
+                add("priority", 42).
+                build();
 
-        updateResponse = this.provider.client().target(location)
-                .request(MediaType.APPLICATION_JSON)
+        updateResponse = this.provider.client().
+                target(location).
+                request(MediaType.APPLICATION_JSON)
                 .put(Entity.json(updated));
-        assertThat(updateResponse.getStatus(), is(200));
+        assertThat(updateResponse.getStatus(), is(409));
+        String conflictInformation = updateResponse.getHeaderString("cause");
+        assertNotNull(conflictInformation);
+        System.out.println("conflictInformation = " + conflictInformation);
 
         //find again
         JsonObject updatedTimeEntry = this.provider.client()
                 .target(location)
                 .request(MediaType.APPLICATION_JSON)
                 .get(JsonObject.class);
-        assertTrue(updatedTimeEntry.getString("caption").contains("update"));
+        assertTrue(updatedTimeEntry.getString("caption").contains("implemented"));
 
         // update status
         JsonObjectBuilder statusBuilder = Json.createObjectBuilder();
@@ -140,4 +146,38 @@ public class TimeEntriesResourcesIT {
         assertThat(deleteResponse.getStatus(), is(204));
     }
 
+    @Test
+    public void createTimeEntryWithoutCaption() {
+        JsonObjectBuilder timeEntryBuilder = Json.createObjectBuilder();
+        JsonObject timeEntryJson = timeEntryBuilder
+                .add("priority", 42)
+                .build();
+        Response postReponse = this.provider.target().request().post(Entity.json(timeEntryJson));
+        assertThat(postReponse.getStatus(), is(400));
+        postReponse.getHeaders().entrySet().forEach(System.out::println);
+    }
+
+    @Test
+    public void createValideTimeEntry() {
+        JsonObjectBuilder timeEntryBuilder = Json.createObjectBuilder();
+        JsonObject timeEntryJson = timeEntryBuilder
+                .add("caption", "10")
+                .add("priority", 42)
+                .build();
+        Response postReponse = this.provider.target().request().post(Entity.json(timeEntryJson));
+        assertThat(postReponse.getStatus(), is(201));
+        postReponse.getHeaders().entrySet().forEach(System.out::println);
+    }
+
+    @Test
+    public void createTimeEntryWithHighro() {
+        JsonObjectBuilder timeEntryBuilder = Json.createObjectBuilder();
+        JsonObject timeEntryJson = timeEntryBuilder
+                .add("caption", "10")
+                .add("priority", 42)
+                .build();
+        Response postReponse = this.provider.target().request().post(Entity.json(timeEntryJson));
+        postReponse.getHeaders().entrySet().forEach(System.out::println);
+        assertThat(postReponse.getStatus(), is(400));
+    }
 }

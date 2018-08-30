@@ -1,10 +1,14 @@
 package de.spiegel.timeregistration.business.timeentries.entity;
 
+import de.spiegel.timeregistration.business.CrossCheck;
+import de.spiegel.timeregistration.business.ValidEntity;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.Version;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -17,7 +21,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQuery(name = TimeEntry.findAll, query = "SELECT t from TimeEntry t")
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class TimeEntry {
+@CrossCheck
+public class TimeEntry implements ValidEntity {
 
     @Id
     @GeneratedValue
@@ -25,6 +30,8 @@ public class TimeEntry {
     static final String PREFIX = "timeentries.entity.TimeEntry.";
     public static final String findAll = PREFIX + "findAll";
 
+    @NotNull
+    @Size(min = 1, max = 256)
     private String caption;
     private String description;
     private int priority;
@@ -68,6 +75,11 @@ public class TimeEntry {
 
     public void setDone(boolean done) {
         this.done = done;
+    }
+
+    @Override
+    public boolean isValide() {
+        return this.priority > 10 && this.description != null;
     }
 
 }
