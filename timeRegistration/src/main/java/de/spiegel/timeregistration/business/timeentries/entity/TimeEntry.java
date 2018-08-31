@@ -31,7 +31,7 @@ public class TimeEntry implements ValidEntity {
     public static final String findAll = PREFIX + "findAll";
 
     @NotNull
-    @Size(min = 1, max = 256)
+    @Size(min = 2, max = 256)
     private String caption;
     private String description;
     private int priority;
@@ -77,9 +77,24 @@ public class TimeEntry implements ValidEntity {
         this.done = done;
     }
 
+    public void setCaption(String caption) {
+        this.caption = caption;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
+    }
+
     @Override
     public boolean isValide() {
-        return this.priority > 10 && this.description != null;
+        if (this.priority <= 10) {
+            return true;
+        }
+        return this.description != null && !this.description.isEmpty();
     }
 
 }

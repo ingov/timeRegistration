@@ -1,8 +1,10 @@
 package de.spiegel.timeregistration.business.timeentries.boundary;
 
+import de.spiegel.timeregistration.business.logging.boundary.BoundaryLogger;
 import de.spiegel.timeregistration.business.timeentries.entity.TimeEntry;
 import java.util.List;
 import javax.ejb.Stateless;
+import javax.interceptor.Interceptors;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
@@ -12,6 +14,7 @@ import javax.persistence.PersistenceContext;
  * @author veithi
  */
 @Stateless
+@Interceptors(BoundaryLogger.class)
 public class TimeEntryManager {
 
     @PersistenceContext

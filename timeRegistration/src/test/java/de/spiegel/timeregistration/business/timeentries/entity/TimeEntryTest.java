@@ -21,4 +21,12 @@ public class TimeEntryTest {
         assertFalse(invalid.isValide());
     }
 
+    @Test
+    public void timeEntryWithoutDescription() {
+        TimeEntry valid = new TimeEntry("implement", null, 10);
+        assertTrue(valid.isValide());
+
+    }
+
+
 }

@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html" 
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"/>
+    </h:head>
+    <h:body>
+
+
+        <p:dataList id="datalist" value="#{index.timeEntries}" var="timeEntry" type="ordered">
+            <f:facet name="header">
+                TimeEntries
+            </f:facet>
+        #{timeEntry.caption}, #{timeEntry.description}, #{timeEntry.priority}
+        </p:dataList>
+
+
+        <p:dataTable id="table" var="timeEntry" value="#{index.timeEntries}" sortMode="">
+            <p:column headerText="Caption">
+                <h:outputText value="#{timeEntry.caption}" />
+            </p:column>
+
+            <p:column headerText="Description">
+                <h:outputText value="#{timeEntry.description}" />
+            </p:column>
+
+            <p:column headerText="Priority">
+                <h:outputText value="#{timeEntry.priority}" />
+            </p:column>
+
+        </p:dataTable>
+
+
+        <h:form prependId="false">
+            <p:growl id="growl" life="2000" />
+            <span class="badge badge-primary">TimeEntries</span>
+
+            <h:panelGrid columns="2" cellpadding="5">
+                <h:outputText value="Caption:"/> <input jsf:id="caption" placeholder="Enter the caption" type="text" value="#{index.timeEntry.caption}" class="form-control"/>
+                <h:outputText value="Description:"/> <p:inputText value="#{index.timeEntry.description}" />
+                <h:outputText value="Priority:"/> <p:inputText value="#{index.timeEntry.priority}"/>
+                <h:outputText value=""/>
+                <p:commandButton value="Save" action='#{index.save}' update="growl,table,datalist"/>
+            </h:panelGrid>
+
+        </h:form>
+    </h:body>
+</html>
+

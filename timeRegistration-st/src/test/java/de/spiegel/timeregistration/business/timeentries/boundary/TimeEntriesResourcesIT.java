@@ -31,7 +31,7 @@ public class TimeEntriesResourcesIT {
         JsonObject timeEntryJson = timeEntryBuilder
                 .add("caption", "implement 42")
                 .add("description", "...")
-                .add("priority", 42)
+                .add("priority", 10)
                 .build();
 
         Response postReponse = this.provider.target().request().post(Entity.json(timeEntryJson));
@@ -161,7 +161,8 @@ public class TimeEntriesResourcesIT {
     public void createValideTimeEntry() {
         JsonObjectBuilder timeEntryBuilder = Json.createObjectBuilder();
         JsonObject timeEntryJson = timeEntryBuilder
-                .add("caption", "10")
+                .add("caption", "sdsa")
+                .add("description", "...")
                 .add("priority", 42)
                 .build();
         Response postReponse = this.provider.target().request().post(Entity.json(timeEntryJson));
@@ -170,11 +171,11 @@ public class TimeEntriesResourcesIT {
     }
 
     @Test
-    public void createTimeEntryWithHighro() {
+    public void createTimeEntryWithHighPrio() {
         JsonObjectBuilder timeEntryBuilder = Json.createObjectBuilder();
         JsonObject timeEntryJson = timeEntryBuilder
                 .add("caption", "10")
-                .add("priority", 42)
+                .add("priority", 12)
                 .build();
         Response postReponse = this.provider.target().request().post(Entity.json(timeEntryJson));
         postReponse.getHeaders().entrySet().forEach(System.out::println);
