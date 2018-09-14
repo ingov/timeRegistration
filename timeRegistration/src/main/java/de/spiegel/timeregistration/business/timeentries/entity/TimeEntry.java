@@ -3,6 +3,7 @@ package de.spiegel.timeregistration.business.timeentries.entity;
 import de.spiegel.timeregistration.business.CrossCheck;
 import de.spiegel.timeregistration.business.ValidEntity;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
@@ -22,6 +23,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 @CrossCheck
+@EntityListeners(TimeEntryAuditor.class)
 public class TimeEntry implements ValidEntity {
 
     @Id
