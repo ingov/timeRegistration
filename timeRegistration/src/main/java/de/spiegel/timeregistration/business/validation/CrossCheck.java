@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.spiegel.timeregistration.business;
+package de.spiegel.timeregistration.business.validation;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

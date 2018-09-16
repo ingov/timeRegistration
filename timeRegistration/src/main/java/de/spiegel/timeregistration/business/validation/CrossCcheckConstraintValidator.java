@@ -1,5 +1,6 @@
-package de.spiegel.timeregistration.business;
+package de.spiegel.timeregistration.business.validation;
 
+import de.spiegel.timeregistration.business.ValidEntity;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 

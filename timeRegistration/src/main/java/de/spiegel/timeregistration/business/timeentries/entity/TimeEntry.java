@@ -1,6 +1,6 @@
 package de.spiegel.timeregistration.business.timeentries.entity;
 
-import de.spiegel.timeregistration.business.CrossCheck;
+import de.spiegel.timeregistration.business.validation.CrossCheck;
 import de.spiegel.timeregistration.business.ValidEntity;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -97,6 +97,11 @@ public class TimeEntry implements ValidEntity {
             return true;
         }
         return this.description != null && !this.description.isEmpty();
+    }
+
+    @Override
+    public String toString() {
+        return "TimeEntry{" + "id=" + id + ", caption=" + caption + ", description=" + description + ", priority=" + priority + ", done=" + done + ", version=" + version + '}';
     }
 
 }
