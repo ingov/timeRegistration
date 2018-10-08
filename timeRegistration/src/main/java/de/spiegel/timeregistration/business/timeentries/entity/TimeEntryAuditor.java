@@ -15,6 +15,7 @@ class TimeEntryAuditor {
     @Inject
     @ChangeEvent(ChangeEvent.Type.CREATION)
     Event<TimeEntry> create;
+
     @Inject
     @ChangeEvent(ChangeEvent.Type.UPDATE)
     Event<TimeEntry> update;

@@ -1,7 +1,7 @@
 package de.spiegel.timeregistration.business.timeentries.entity;
 
 import de.spiegel.timeregistration.business.validation.CrossCheck;
-import de.spiegel.timeregistration.business.ValidEntity;
+import de.spiegel.timeregistration.business.validation.ValidEntity;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
